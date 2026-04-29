@@ -1,6 +1,8 @@
 let numeros = localStorage.getItem("numeros") !== null ? JSON.parse(localStorage.getItem("numeros")) : [];
 
 const $listaTareas = document.querySelector("#lista-numeros");
+let filtroEmpiezaCon = "";
+
 
 function escapeHTML(str) {
     const map = {
@@ -15,9 +17,18 @@ function escapeHTML(str) {
 
 
 function render() {
+
+    let listaFinal = numeros;
+
+    if (filtroEmpiezaCon.trim() !== "") {
+        listaFinal = numeros.filter(num =>
+            num.nombre.toLowerCase().startsWith(filtroEmpiezaCon.toLowerCase())
+        );
+    }
+
     $listaTareas.innerHTML = "";
 
-    numeros.forEach(element => {
+    listaFinal.forEach(element => {
         $listaTareas.innerHTML += `
             <li>
                 <div>
@@ -119,5 +130,12 @@ function importarContactosFuncion() {
         $dialog.close()
     }
 }
+
+const $busqueda = document.querySelector("#busqueda")
+
+$busqueda.addEventListener("input", (e) => {
+    filtroEmpiezaCon = e.target.value;
+    render()
+})
 
 render()
