@@ -3,14 +3,14 @@ let numeros = localStorage.getItem("numeros") !== null ? JSON.parse(localStorage
 const $listaTareas = document.querySelector("#lista-numeros");
 
 function escapeHTML(str) {
-  const map = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
-  };
-  return str.replace(/[&<>"']/g, (m) => map[m]);
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    };
+    return str.replace(/[&<>"']/g, (m) => map[m]);
 }
 
 
@@ -74,6 +74,50 @@ $formulario.addEventListener("submit", (e) => {
 
 })
 
+const $dialog = document.querySelector("#dialog");
+
+function cerrarDialog() {
+    $dialog.close()
+}
+
+function exportarContactos() {
+
+    const b64 = btoa(JSON.stringify(numeros));
+    $dialog.showModal()
+
+    $dialog.innerHTML = `
+        <h1>Exportar contactos</h1>
+        <pre>${b64}</pre>
+        <button onclick='cerrarDialog()'>Cerrar dialog</button>
+    `
+}
+
+function importarContactosDialog(data) {
+
+    $dialog.innerHTML = `
+        <h1>Importar contactos</h1>
+        <textarea id="textarea-dialog" style='width: 100%'></textarea>
+        <br/>
+        <button onclick='importarContactosFuncion()'>Importar</button>
+        <button onclick='cerrarDialog()'>Cerrar</button>
+    `
+    $dialog.showModal()
+}
+
+function importarContactosFuncion() {
+    const value = document.querySelector("#textarea-dialog").value;
+
+    try {
+        const b64 = atob(value);
+        const imported = JSON.parse(b64)
+        numeros = imported;
+        guardarLocalStorage()
+        $dialog.close()
+        render()
+    } catch {
+        alert("No se pudo importar los contactos")
+        $dialog.close()
+    }
+}
+
 render()
-
-
