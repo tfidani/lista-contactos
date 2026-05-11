@@ -28,18 +28,23 @@ function render() {
 
     $listaTareas.innerHTML = "";
 
-    listaFinal.forEach(element => {
+    if (listaFinal.length !== 0) {
+        listaFinal.forEach(element => {
         $listaTareas.innerHTML += `
             <li>
                 <div>
                     <h2>> ${element.nombre}</h2>
                     <p>${element.numero}</p>
                 </div>
-                <button onclick="deleteTarea('${element.id}')">Eliminar</button>
+                <button class="btn-eliminar" onclick="deleteTarea('${element.id}')">Eliminar 🗑️</button>
             </li>
             <hr />
         `
-    });
+        });
+    } else {
+        $listaTareas.innerHTML = "<p id='vacio'>Vacio!</p>"
+    }
+        
 }
 
 function guardarLocalStorage() {
